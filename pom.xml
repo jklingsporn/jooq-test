@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>test</groupId>
+    <artifactId>test</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+            <version>3.11.2</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <!-- Specify the maven code generator plugin -->
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <version>3.11.2</version>
+
+                <!-- The plugin should hook into the generate goal -->
+                <executions>
+                    <execution>
+                        <!--<phase>none</phase>-->
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>42.2.2</version>
+                    </dependency>
+                </dependencies>
+
+                <!-- Specify the plugin configuration.
+                     The configuration format is the same as for the standalone code generator -->
+                <configuration>
+                    <!-- JDBC connection parameters -->
+                    <jdbc>
+                        <driver>org.postgresql.Driver</driver>
+                        <url>jdbc:postgresql://127.0.0.1:5432/postgres</url>
+                        <!-- always connect against local db -->
+                        <user>user</user>
+                        <password>password</password>
+                    </jdbc>
+
+                    <!-- Generator parameters -->
+                    <generator>
+                        <database>
+                            <name>org.jooq.meta.postgres.PostgresDatabase</name>
+                            <includes>.*</includes>
+                            <!--<inputCatalog>information_schema</inputCatalog>-->
+                            <inputSchema>public</inputSchema>
+                        </database>
+                        <target>
+                            <!-- This is where jOOQ will put your files -->
+                            <packageName>test.generated.schema</packageName>
+                            <directory>src/main/java</directory>
+                        </target>
+                        <generate>
+                            <interfaces>true</interfaces>
+                            <daos>true</daos>
+                            <fluentSetters>true</fluentSetters>
+                            <javaTimeTypes>true</javaTimeTypes>
+                            <pojosEqualsAndHashCode>true</pojosEqualsAndHashCode>
+                        </generate>
+
+                    </generator>
+
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
